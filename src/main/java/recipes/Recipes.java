@@ -3,13 +3,11 @@
  */
 package recipes;
 
-import java.sql.Connection;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-import recipes.dao.DbConnection;
 import recipes.entity.Recipe;
 import recipes.exception.DbException;
 import recipes.service.RecipeService;
@@ -20,12 +18,16 @@ import recipes.service.RecipeService;
 public class Recipes {
 private Scanner scanner = new Scanner(System.in);
 private RecipeService recipeService = new RecipeService();
-
+private Recipe curRecipe;
 //@formatter:off
 private List<String> operations = List.of(
 	"1) Create and populate all tables",	
-	"2) Add a recipe"
+	"2) Add a recipe",
+	"3) List recipes",
+	"4) Select working recipe"
+
 );
+
 
 //@formatter:on
 
@@ -63,12 +65,53 @@ private void displayMenu() {
 		case 2: 
 			addRecipe();
 			break;	
+		
+		case 3:
+			listRecipes();
+			break;
+			
+		case 4:
+			setCurrentRecipe();
+			break;
 		 }
 		} catch(Exception e) {
 			System.out.println("\nError: " + e.toString() + "Try again." );
 		}
 	}
   }
+
+private void setCurrentRecipe() {
+	List<Recipe> recipes = listRecipes();
+	
+	
+	Integer recipeId = getIntInput("Select a recipe ID");
+	
+	curRecipe = null;
+	
+	for(Recipe recipe : recipes) {
+		if(recipe.getRecipeId().equals(recipeId)) {
+			curRecipe = recipeService.fetchRecipeById(recipeId);
+			break;
+		}
+	}
+	
+	if(Objects.isNull(curRecipe)) {
+		System.out.println("\nInvalid recipe ID");
+	}
+	
+}
+
+private List<Recipe> listRecipes() {
+ 	List<Recipe> recipes = recipeService.fetchRecipes();
+ 	
+ 	System.out.println("\nRecipes");
+ 	
+ 	recipes.forEach(recipe -> System.out.println("     " + recipe.getRecipeId() + ": " +
+ 	recipe.getRecipeName()));
+ 	
+ 	return recipes;
+}
+
 private void addRecipe() {
 	String name = getStringInput("Enter the recipe name"); 
 	String notes = getStringInput("Enter recipe notes");
@@ -89,6 +132,8 @@ private void addRecipe() {
 	
 	Recipe dbRecipe = recipeService.addRecipe(recipe);
 	System.out.println(" You added this recipe:\n" + dbRecipe);
+	
+	curRecipe = recipeService.fetchRecipeById(dbRecipe.getRecipeId());
 	
 }
 
@@ -158,6 +203,14 @@ private void printOperations() {
 	System.out.println("Here's what you can do:");
 	
 	operations.forEach(op -> System.out.println("   " +op));
+	if (Objects.isNull(curRecipe)) {
+		System.out.println("\nYou are not working with a recipe.");
+	} else {
+		System.out.println("\nYou are working with recipe " + curRecipe);
+	}
+
+	
+	
 }
 private String getStringInput(String prompt) {
 	System.out.print(prompt + ": ");
