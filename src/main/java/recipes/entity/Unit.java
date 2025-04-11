@@ -3,11 +3,11 @@ package recipes.entity;
 public class Unit {
 private Integer unitId;
 private String unitNameSingular;
-private  String UnitNamePlural;
+private  String unitNamePlural;
 
 @Override
 public String toString() {
-	return "Unit [unitId=" + unitId + ", unitNameSingular=" + unitNameSingular + ", UnitNamePlural=" + UnitNamePlural
+	return "Unit [unitId=" + unitId + ", unitNameSingular=" + unitNameSingular + ", UnitNamePlural=" + unitNamePlural
 			+ "]";
 }
 public Integer getUnitId() {
@@ -23,9 +23,9 @@ public void setUnitNameSingular(String unitNameSingular) {
 	this.unitNameSingular = unitNameSingular;
 }
 public String getUnitNamePlural() {
-	return UnitNamePlural;
+	return unitNamePlural;
 }
 public void setUnitNamePlural(String unitNamePlural) {
-	UnitNamePlural = unitNamePlural;
+	this.unitNamePlural = unitNamePlural;
 }
 }

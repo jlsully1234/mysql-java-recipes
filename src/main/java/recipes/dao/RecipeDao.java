@@ -75,7 +75,7 @@ public class RecipeDao extends DaoBase {
 	String sql =""
 		+ "SELECT c.* "
 		+ "FROM " + RECIPE_CATEGORY_TABLE + " rc "
-	    + "JOIN " + CATEGORY_TABLE + " c USING (catedory_id) "
+	    + "JOIN " + CATEGORY_TABLE + " c USING (category_id) "
 	    + "WHERE recipe_id = ? "
 	    + "ORDER BY c.category_name";
 	  // @formatter: on
@@ -99,7 +99,7 @@ private List<Step> fetchRecipeSteps(Connection conn, Integer recipeId) throws SQ
 	  
 	  try(PreparedStatement stmt = conn.prepareStatement(sql)) {
 		  setParameter(stmt, 1, recipeId, Integer.class);
-		  try(ResultSet rs = stmt.executeQuery(sql)) {
+		  try(ResultSet rs = stmt.executeQuery()) {
 			List<Step> steps = new LinkedList<Step>();  
 			
 			while(rs.next()) {
