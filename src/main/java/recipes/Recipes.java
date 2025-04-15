@@ -6,9 +6,10 @@ package recipes;
 import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Locale.Category;
+import recipes.entity.Category;
 import java.util.Objects;
 import java.util.Scanner;
+
 import recipes.entity.Ingredient;
 import recipes.entity.Recipe;
 import recipes.entity.Step;
@@ -24,6 +25,7 @@ private Scanner scanner = new Scanner(System.in);
 private RecipeService recipeService = new RecipeService();
 private Recipe curRecipe;
 //@formatter:off
+//List of all operations
 private List<String> operations = List.of(
 	"1) Create and populate all tables",	
 	"2) Add a recipe",
@@ -31,7 +33,9 @@ private List<String> operations = List.of(
 	"4) Select working recipe",
 	"5) Add ingredient to current recipe",
 	"6) Add step to current recipe",
-	"7) Add category to current recipe"
+	"7) Add category to current recipe",
+	"8) Modify step in current recipe",
+	"9) Delete recipe"
 
 );
 
@@ -88,7 +92,13 @@ private void displayMenu() {
 		case 7:
 			addCategoryToCurrentRecipe();
 			break;
-					
+		case 8: 
+			modifyStepInCurrentRecipe();
+			break;
+		case 9:
+			deleteRecipe();
+			break;
+	
 		 }
 		} catch(Exception e) {
 			System.out.println("\nError: " + e.toString() + "Try again." );
@@ -97,6 +107,49 @@ private void displayMenu() {
   }
 
 	
+private void deleteRecipe() {
+listRecipes();	
+Integer recipeId = getIntInput("Enter the ID of the recipe to delete");
+
+if(Objects.nonNull(recipeId)) {
+	recipeService.deleteRecipe(recipeId);
+	
+	System.out.println(" Congratulations, you have deleted recipe");
+	
+	if(Objects.nonNull(curRecipe) && curRecipe.getRecipeId().equals(recipeId)) {
+	 curRecipe = null;	
+	}
+	
+  }
+	
+}
+private void modifyStepInCurrentRecipe() {
+	if(Objects.isNull(curRecipe)) {
+		System.out.println("\nPlease select a recipe first.");
+		return;
+	}
+	
+	List<Step> steps = recipeService.fetchSteps(curRecipe.getRecipeId());
+	
+	System.out.println("\nSteps for current recipe");
+	steps.forEach(step -> System.out.println("   " + step));
+	
+	Integer stepId = getIntInput("Enter step ID of the step to modify");
+	
+	if(Objects.nonNull(stepId));
+	String stepText = getStringInput("Enter new step text");
+	
+	if(Objects.nonNull(stepText) ) {
+		Step step = new Step();
+	
+	step.setStepId(stepId);
+	step.setStepText(stepText);
+	
+	recipeService.modifyStep(step);
+	curRecipe = recipeService.fetchRecipeById(curRecipe.getRecipeId());
+
+	}
+}
 private void addCategoryToCurrentRecipe() {
 	if(Objects.isNull(curRecipe)) {
 		System.out.println("\nPlease select a recipe first.");

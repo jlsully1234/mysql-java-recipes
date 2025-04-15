@@ -5,10 +5,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale.Category;
+import recipes.entity.Category;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-
 import recipes.dao.RecipeDao;
 import recipes.entity.Ingredient;
 import recipes.entity.Recipe;
@@ -167,6 +166,24 @@ public List<Category> fetchCategories() {
 
 public void addCategoryToRecipe(Integer recipeId, String category) {
 	recipeDao.addCategoryToRecipe(recipeId, category);
+	
+}
+
+public List<Step> fetchSteps(Integer recipeId) {
+		return recipeDao.fetchAllRecipesSteps(recipeId);
+}
+
+public void modifyStep(Step step) {
+ if(!recipeDao.modifyRecipeStep(step)) {
+	throw new DbException("Step with ID =" + step.getRecipeId() + " does not exist");
+ }
+}
+
+public void deleteRecipe(Integer recipeId) {
+	if(!recipeDao.deleteRecipe(recipeId)) {
+		throw new DbException("Recipe with ID=" + recipeId + " does not exist");
+		
+	}
 	
 }
 
