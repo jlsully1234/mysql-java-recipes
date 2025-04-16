@@ -436,7 +436,7 @@ public List<Recipe> fetchAllRecipes() {
 		
 		try(PreparedStatement stmt = conn.prepareStatement(sql)) {
 		setParameter(stmt, 1, step.getStepText(), String.class);
-		setParameter(stmt, 2, step.getRecipeId(), Integer.class);
+		setParameter(stmt, 2, step.getStepId(), Integer.class);
 		
 		boolean updated = stmt.executeUpdate() == 1;
 		commitTransaction(conn);

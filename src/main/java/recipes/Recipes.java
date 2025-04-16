@@ -114,7 +114,7 @@ Integer recipeId = getIntInput("Enter the ID of the recipe to delete");
 if(Objects.nonNull(recipeId)) {
 	recipeService.deleteRecipe(recipeId);
 	
-	System.out.println(" Congratulations, you have deleted recipe");
+	System.out.println(" Congratulations, you have deleted recipe " + recipeId);
 	
 	if(Objects.nonNull(curRecipe) && curRecipe.getRecipeId().equals(recipeId)) {
 	 curRecipe = null;	
